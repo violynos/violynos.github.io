@@ -1,0 +1,31 @@
+/*
+whiteish    = #FFF8F0
+creame      = #FFCF99
+blue        = #111D4A
+blackish    = #1E1E24
+redish      = #92140C
+*/
+
+
+header {
+  
+  background-color: #111D4A;
+  color: #FFCF99;
+  font-variant: small-caps;
+  font-family: arial;
+  
+}
+body {
+  background-color: #FFF8F0;
+  color: #1E1E24;
+  font-family: Verdana;
+}
+
+a {
+  
+  color: #92140C;
+  text-decoration: none;
+  font-weight: bold;
+  font-variant: small-caps;
+  
+}

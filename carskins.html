@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  
+  <h1>
+  
+  </h1>
+  
+  [size=200]
+The "ultimate not-so ultimate but I tried to make it so" documentation about how a trackmania model is built in general
+[/size]
+
+On carpark: https://www.trackmania-carpark.com/forum ... 14&t=24143
+
+[size=85]Side note: do not hesitate a second to post a comment if you find new informations to add or correct current ones (explain precisely, please). I'll be glad to update this post so everyone can know more.[/size]
+[size=50]I apologize for any grammar mistake you find. I'm bad at explaining things.[/size]
+
+[size=150]Some elements to put in place before the beginning:[/size]
+
+_A "primitive" is a group of objects under a certain name prefix. For example, sBody and sDoor are two objects but together they form the "s" primitive (if they are the only objects named with the prefix "s");
+
+_The whole scene must contain less than ~45 objects;
+
+_Excluding dummies, all vertices from any object must be contained within the coordinates (X∈[-1,5 ; 1,5], Y∈[-3 ; 3], Z∈[-0.2 ; 2.5]) (using generic units);
+
+_The reference coordinates system mentioned further is this one:
+
+_In the following parts: when an axis is not associated with a pivot, it is a reference axis;
+
+_Text with this color refers to TMUF-only informations, while text with this color refers to TM2-only informations.
+
+
+If everything is clear, let's begin.
+
+The main model shown in-game is composed of 3 primitives for TMUF, and TM2 has 2 other primitives:
+
+[size=200]"d" Primitive:[/size]
+
+
+Objects names: d[Name] // Only dBody reacts to turbos // All parts react to turbos.
+
+Dynamic objects:
+[list:1ddhrk82] [color=#00adcc:1ddhrk82]Exhaust: Shakes a little;
+Hood: Rotates on the X-axis with the pivot as center. Can be detached;
+Trunk: Rotates on the X-axis with the pivot as center. Can be detached;
+XDoor (L and R): Rotates on the Z-axis with the pivot as center. Can be detached;[/color:1ddhrk82]
+XXWheel (FL, FR, RL, RR): Rotates on the pivot's X and Z axes (Z-axis is only for FL and FR wheels) with the pivot as center. The pivot's X-axis rotation is made from the pivot's Y-axis to its Z-axis. The rotation on the pivot's Z-axis is made from the pivot's X-axis to the pivot's Y-axis when turning to the left (and the opposite when turning to the right) . Also, the pivot should have the same X-position as Hub pivot for correct left/right turns;
+XXGuard (FL, FR, RL, RR): Same as Wheel.
+Every next part requires the dBody object to be present in order to work, as they use the dBody's relative movement in order to do their transformations (for the game, the wheels do not MOVE).
+XXHub (FL, FR, RL, RR): No movement. Activates the next objects.
+For the following parts: The Y-axis of the pivot is used as a reference to warp the object, and must be oriented towards the wheel, with the part's global "directive line" as a direction. The pivot's position represents the link between the part and the hub/wheel.
+XXArmTop (FL, FR, RL, RR).
+XXArmBot (FL, FR, RL, RR).
+XXSusp (FL, FR, RL, RR).
+XXArmDir (FL, FR).
+XXCardan (RL, RR): Rotates on the pivot's Y-axis.
+
+
+Texture name: Details.dds OR DetailsDiffuse.dds // Alpha affects glossiness.
+
+Illumination texture: Illum.dds OR DetailsIllum.dds // Alpha color effect: lightness/brightness affects when parts will emit light (0% for braking, 25% for brake discs heat, 50% for front lights, 75% for exhaust heat and 100% for full, unaffected lights).
+
+Dirties: DetailsDirty.dds // Alpha affects dirties opacity.
+
+[color=#00adcc:1ddhrk82]Damages: put "_" before the damaged objects name. They must have the SAME amount of vertices than their original equivalent.
+
+Damages Textures: DetailsDamage.dds // Alpha affects damages opacity.
+
+Vertex limit for the primitive: 65536.[/color:1ddhrk82]
+[/list:u:1ddhrk82]
+
+[size=200]"g" Primitive:[/size]
+
+Objects names: g[Name]. // Only gBody reacts to turbos // All parts react to turbos.
+
+[color=#00adcc:1ddhrk82]Dynamic objects:
+[list:1ddhrk82]FWShield: breaks upon impact;
+RWShield: breaks upon impact;
+XDoor (L and R): Breaks upon impact. Rotates on the Z-axis with the pivot as center. Can be detached;
+Hood: Doesnt work?
+Trunk: Breaks upon impact. Rotates on the X-axis with the pivot as center. Can be detached.
+[/color:1ddhrk82]
+
+Texture name: Details.dds OR DetailsDiffuse.dds // Color effect: affected by lightness/brightness value (100% for full transparency, 0% for full opacity). Alpha has no effect.
+
+Dirties: Not affected.
+
+[color=#00adcc:1ddhrk82]Damages: put "_" before the damaged objects name. They must have the SAME amount of vertices than their original equivalent. (ridiculous but works)
+
+Damages texture: Not affected.
+
+Vertex limit for the primitive: 65536.[/color:1ddhrk82][/list:u:1ddhrk82]
+
+
+[size=200]"s" Primitive:[/size]
+
+Objects names: s[Name] // Only sBody reacts to turbos // All parts react to turbos.
+
+Dynamic objects:
+[list:1ddhrk82][color=#00adcc:1ddhrk82]Hood: Rotates on the X-axis with the pivot as center. Can be detached;
+Trunk: Rotates on the X-axis with the pivot as center. Can be detached;
+XDoor: Rotates on the Z-axis with the pivot as center. Can be detached;[/color:1ddhrk82]
+XXWheel (FL, FR, RL, RR): Rotates on the pivot's X and Z axes (Z-axis is only for FL and FR wheels) with the pivot as center. The pivot's X-axis rotation is made from the pivot's Y-axis to its Z-axis. The rotation on the pivot's Z-axis is made from the pivot's X-axis to the pivot's Y-axis when turning to the left (and the opposite when turning to the right) . Also, the pivot should have the same X-position as Hub pivot for correct left/right turns;
+XXGuard (FL, FR, RL, RR): Same as Wheel;
+Exhaust: Shakes a little.
+
+
+Texture name: Diffuse.dds OR SkinDiffuse.dds // Alpha affects reflection and glossiness amount.
+
+Dirties: DiffuseDirty.dds OR SkinDirty.dds. // Alpha affects dirties opacity.
+
+[color=#00adcc:1ddhrk82]Damages: put "_" before the damaged objects name. They must have the SAME amount of vertices than their original equivalent.
+
+Damages Textures: SkinDamage.dds. // Alpha affects damages opacity.
+
+Vertex limit: 65536.[/color:1ddhrk82][/list:u:1ddhrk82]
+
+[color=#00adcc:1ddhrk82]
+[size=200]"p" Primitive: [/size]
+
+Objects names: p[Name] // All parts react to turbos.
+
+Dynamic objects: No.
+
+Texture name: Pilot.dds // Alpha affects glossiness.
+
+Dirties: PilotDirty AND Dirty.dds. // Alpha affects dirties opacity.
+
+Damages: No.
+
+Vertex limit for the primitive: 65536.
+
+
+
+[size=200]"w" Primitive:[/size]
+
+Objects names: w[Name] // All parts react to turbos.
+
+Dynamic objects:
+[list:1ddhrk82] Hood: Rotates on the X-axis with the pivot as center. Can be detached;
+Trunk: Rotates on the X-axis with the pivot as center. Can be detached;
+XDoor (L and R): Rotates on the Z-axis with the pivot as center. Can be detached;
+XXWheel (FL, FR, RL, RR): Rotates on the pivot's X and Z axes (Z-axis is only for FL and FR wheels) with the pivot as center. The pivot's X-axis rotation is made from the pivot's Y-axis to its Z-axis. The rotation on the pivot's Z-axis is made from the pivot's X-axis to the pivot's Y-axis when turning to the left (and the opposite when turning to the right) . Also, the pivot should have the same X-position as Hub pivot for correct left/right turns;
+XXGuard (FL, FR, RL, RR): Same as Wheel;
+Exhaust: Shakes a little.
+
+
+Texture name: WheelsDiffuse.dds
+
+Dirties: WheelsDirty.dds // Alpha affects dirties opacity.
+
+Damages: put "_" before the damaged objects names. They must have the SAME amount of vertices than their original equivalent.
+
+Damages Textures: WheelsDamage.dds // Alpha affects damages opacity.
+
+Vertex limit for the primitive: 65536.[/list:u:1ddhrk82][/color:1ddhrk82]
+
+The game also uses particular objects not shown physically to simulate various effects:
+
+[size=200]Dummy objects:[/size]
+
+Lights (the pivot's position indicates where the lightflare effect will be placed. The pivot's Y-axis must points towards the center of the car, else the effect wont work properly.):
+[list:1ddhrk82] LightXXX (FL1, FL2, FL3, FR1, FR2, FR3, RL, RR): RL and RR are also used for light trails.
+[color=#00adcc:1ddhrk82] XXLight (RL and RR): pivot position is also used for light trails.
+XXLight (FR and FL)[/color:1ddhrk82]
+
+
+LightFProj: pivot position is used to place the beginning of the front light's projection cone on the road.
+
+Projshad OR Fakeshad: plane placed at the origin of the scene, with a 6*4 size, it is used to simulate the shadow of the car on the ground. Pivot's Y-axis must be oriented the same way as the reference Z-axis. Associated texture: Projshad.dds OR FakeShad.dds
+
+[color=#00adcc:1ddhrk82]ExhaustX (up to 8): pivot's position and orientation is used to determine where and how to put flames. Y-axis must be oriented in the exhaust (or whatever part you want flames on).
+
+WheelMin: A cylinder that matches the size of the biggest wheel. It is used to raise all parts excluding wheels and suspension system (top/bottom arms, suspension, direction arm, cardan, hub, guard) to avoid clipping with the WheelMin.[/list:u:1ddhrk82][/color:1ddhrk82]
+
+
+[size=200]LODs vertex limit:[/size]
+
+If your model is beyond those limits, it wont work online (you can use it offline, but problems can happen)
+
+[color=#ce0000:1ddhrk82]TMUF:
+Highpoly (MainBodyHigh.Solid.gbx): none.
+Lowpoly (MainBody.Solid.gbx): 3600.
+[/color:1ddhrk82]
+
+[color=#00adcc:1ddhrk82]TM2:
+VeryHighpoly (MainBodyVeryHigh.Solid.gbx): 100000
+Highpoly (MainBodyHigh.Solid.gbx): 20200
+Lowpoly (MainBody.Solid.gbx): 15000 // I'd recommend to keep your lowpolies under 3600 so they also work on TMUF.
+
+
+[size=200]About export: how to use the dae format:[/size]
+
+Before exporting, you'll need to check two or three things:
+
+_Clear ALL the UV channels (but the first one used for your textures, obviously) of each object, else, the file will be unusable;
+
+_Keep only one material and material ID for all the objects;
+
+_Use the metric units in your files (very important, else you'll get tiny crunched bits), rescale properly if needed (with all the according reset xforms of course) and export to metric (for max users);
+
+_When exporting, you must also set the Y-axis up instead of the Z-axis up, else the model will be a bit wonky;
+
+_[/color:1ddhrk82]Concerning pivots:[color=#00adcc:1ddhrk82] Because this format uses the Y-axis going upwards instead of the Z-axis, all objects using their pivots's axes will go batshit insane. To fix this, do a 90° rotation of the wheels, guards and hubs pivots so the Y-axis goes up. On the suspensions, rotate them so the pivots's Y-axes goes up and the Z-axes goes the opposite way from the wheel it is fixed to, with the part's global "directive line" as a direction ("replacing" the old Y-axis but with an opposite way). Last but not least, do a 90° rotation on the LightFProj and Projshad/Fakeshad pivots so the LightFProj pivot has the Y-axis up and the Z-axis pointing frontwards and the ProjShad pivot has the Z-axis going downwards and the Y-axis going frontwards;
+
+_ Use the NadeoImporter 2014-10-22 build: https://doc.maniaplanet.com/nadeo-impor ... ng-started as the others wont work at the moment;
+[/color:1ddhrk82]
+
+[size=200]About export: 3ds VS dae[/size]
+
+dae:
+[color=#40BF00:1ddhrk82]_Preserves smoothing better than 3ds;
+_As a consequence, less vertices on the model;
+_Potential use of normals (untested, to confirm);[/color:1ddhrk82]
+_Heavy files;
+
+
+
+3ds:
+[color=#40BF00:1ddhrk82]_No excess pivot manipulation;
+_Less use of units system;[/color:1ddhrk82]
+[color=#BF0000:1ddhrk82]_Cuts the already present smoothing groups using your mapping (can do nasty things);
+_Archaic;[/color:1ddhrk82]
+
+
+
+Random tips:
+
+_Textures are usually saved in DDS DTX5 format (besides textures with no alpha which can be saved in DDS DXT1). The intel texture works equivalent are respectively BC3 8bpp and BC1 4bpp;
+
+_TM2 can use uncompressed 32bpp dds textures (but they're huge, like HUGE);
+
+_All textures must be powers of 2 in size (else you cant save in dds anyways);
+
+_TMUF and TM2 have a certain vertex welding threshold when converting models to gbx (~0.003), so be careful when using small objects.
+</html>
